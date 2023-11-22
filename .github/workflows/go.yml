@@ -11,6 +11,9 @@ on:
       - feature/**
 
 jobs:
+  env:
+    SERVICE_NAME: "aviator"
+    PRIVATE_REGISTRY_URL: "aviator-registry.kr.ncr.ntruss.com"
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -45,7 +48,7 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
-          registry: $PRIVATE_REGISTRY_URL
+          registry: ${{ env.PRIVATE_REGISTRY_URL }}
           username: ${{ secrets.PRIVATE_REGISTRY_USERNAME }}
           password: ${{ secrets.PRIVATE_REGISTRY_PASSWORD }}
 
@@ -53,7 +56,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: $IMAGE_PATH:${{ steps.image.outputs.version }}
+          images: $ {{ env.PRIVATE_REGISTRY_URL }}:${{ steps.image.outputs.version }}
 
         ### Private Registry push
       - name: Build and push Docker image
@@ -95,8 +98,7 @@ jobs:
       - name: Update Kubernetes resources
         run: |
           cd prd
-          echo $IMAGE_PATH
-          kustomize edit set image aviator-registry.kr.ncr.ntruss.com/aviator:${{ steps.image.outputs.version }}
+          kustomize edit set image ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ steps.image.outputs.version }}
           cat kustomization.yaml
 
       # 수정된 파일 commit & push
@@ -104,5 +106,5 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -am "Update image tag ${{ env.IMAGE_PATH }}:${{ steps.image.outputs.version }}"
+          git commit -am "Update image tag ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ steps.image.outputs.version }}"
           git push origin main
