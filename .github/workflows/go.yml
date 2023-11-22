@@ -11,7 +11,6 @@ on:
 env:
   PRIVATE_REGISTRY_URL: "aviator-registry.kr.ncr.ntruss.com"
   SERVICE_NAME: "aviator"
-  SERVICE_VERSION: "v1.0.0"
 
 jobs:
   build:
@@ -71,8 +70,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.SERVICE_VERSION }}
-          labels: ${{ env.SERVICE_VERSION }}
+          tags: ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.sha_short }}
+          labels: ${{ env.sha_short }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -105,7 +104,7 @@ jobs:
       - name: Update Kubernetes resources
         run: |
           cd prd
-          kustomize edit set image ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.SERVICE_VERSION }}
+          kustomize edit set image ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.sha_short }}
           cat kustomization.yaml
 
       # 수정된 파일 commit & push
@@ -113,5 +112,5 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -am "Update image tag ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.SERVICE_VERSION }}"
+          git commit -am "Update image tag ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.sha_short }}"
           git push origin main
