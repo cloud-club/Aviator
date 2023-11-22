@@ -42,12 +42,6 @@ jobs:
       packages: write
 
     steps:
-      - name: Set and Retrieve Github ENV variables
-        shell: bash
-        run: |
-          echo "tag=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
-          echo "${{ env.tag }}
-
       - name: Check out the repo
         uses: actions/checkout@v4
 
@@ -71,7 +65,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.tag }}
+          tags: ${{ env.GITHUB_SHA }}
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy:
@@ -105,7 +99,7 @@ jobs:
       - name: Update Kubernetes resources
         run: |
           cd prd
-          kustomize edit set image ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.tag }}
+          kustomize edit set image ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.GITHUB_SHA }}
           cat kustomization.yaml
 
       # 수정된 파일 commit & push
@@ -113,5 +107,5 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -am "Update image tag ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.tag }}"
+          git commit -am "Update image tag ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.GITHUB_SHA }}"
           git push origin main
