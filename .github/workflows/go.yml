@@ -64,7 +64,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}"
+          images: ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}
 
         ### Private Registry push
       - name: Build and push Docker image
