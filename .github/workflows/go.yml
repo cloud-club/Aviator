@@ -73,7 +73,7 @@ jobs:
           context: .
           push: true
           tags: ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
-          labels: ${{ env.GITHUB_SHA }}
+          labels: ${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -106,7 +106,7 @@ jobs:
       - name: Update Kubernetes resources
         run: |
           cd prd
-          kustomize edit set image ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.GITHUB_SHA }}
+          kustomize edit set image ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
           cat kustomization.yaml
 
       # 수정된 파일 commit & push
@@ -114,5 +114,5 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -am "Update image tag ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.GITHUB_SHA }}"
+          git commit -am "Update image tag ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ github.sha }}"
           git push origin main
