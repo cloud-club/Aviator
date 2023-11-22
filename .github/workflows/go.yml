@@ -11,6 +11,59 @@ on:
       - feature/**
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.21.x']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      # You can test your matrix by printing the current Go version
+      - name: Display Go version
+        run: go version
+
+  build-and-push-image:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+        ### Private Docker Registry 정보 가져오기
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.PRIVATE_REGISTRY_URL }}
+          username: ${{ secrets.PRIVATE_REGISTRY_USERNAME }}
+          password: ${{ secrets.PRIVATE_REGISTRY_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.IMAGE_PATH }}:${{ steps.image.outputs.version }}
+
+        ### Private Registry push
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.image.outputs.version }}
+          labels: ${{ steps.meta.outputs.labels }}
+
   deploy:
     runs-on: ubuntu-latest
 
@@ -25,12 +78,6 @@ jobs:
           VERSION=$(echo ${{ github.sha }} | cut -c1-8)
           echo VERSION=$VERSION
           echo "::set-output name=version::$VERSION"
-
-      ### Private Docker Registry 정보 가져오기
-
-      ### Docker Build
-
-      ### Docker Registry에 image push
 
       # kustomize 명령을 가져온다.
       - name: Setup Kustomize
