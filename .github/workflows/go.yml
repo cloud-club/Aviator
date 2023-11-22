@@ -68,11 +68,11 @@ jobs:
 
         ### Private Registry push
       - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: .
           push: true
-          tags: ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ env.GITHUB_SHA }}
+          tags: ${{ env.PRIVATE_REGISTRY_URL }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
           labels: ${{ env.GITHUB_SHA }}
 
   deploy:
