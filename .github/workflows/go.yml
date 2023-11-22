@@ -11,9 +11,6 @@ on:
       - feature/**
 
 jobs:
-  env:
-    SERVICE_NAME: "aviator"
-    PRIVATE_REGISTRY_URL: "aviator-registry.kr.ncr.ntruss.com"
   build:
     runs-on: ubuntu-latest
     strategy:
