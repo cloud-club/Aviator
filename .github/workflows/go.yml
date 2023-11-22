@@ -7,12 +7,11 @@ on:
   push:
     branches:
       - master
-      - develop
-      - feature/**
+
 env:
   PRIVATE_REGISTRY_URL: "aviator-registry.kr.ncr.ntruss.com"
   SERVICE_NAME: "aviator"
-  SERVICE_VERSION: "v1.0.2"
+  SERVICE_VERSION: "v1.0.0"
 
 jobs:
   build:
