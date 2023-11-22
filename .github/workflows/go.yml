@@ -41,11 +41,11 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-        ### Private Docker Registry 정보 가져오기
+        ### Private Docker Registry Login
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
-          registry: ${{ env.PRIVATE_REGISTRY_URL }}
+          registry: $PRIVATE_REGISTRY_URL
           username: ${{ secrets.PRIVATE_REGISTRY_USERNAME }}
           password: ${{ secrets.PRIVATE_REGISTRY_PASSWORD }}
 
@@ -53,7 +53,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.IMAGE_PATH }}:${{ steps.image.outputs.version }}
+          images: $IMAGE_PATH:${{ steps.image.outputs.version }}
 
         ### Private Registry push
       - name: Build and push Docker image
