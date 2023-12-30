@@ -21,14 +21,14 @@ import (
 )
 
 type Server struct {
-	CreateCount   int    `json:"serverCreateCount,omitempty"`
-	CreateStartNo int    `json:"serverCreateStartNo,omitempty"`
-	Description   string `json:"serverDescription,omitempty"`
-	ImageNo       string `json:"serverImageNo,omitempty"`
+	CreateCount      int    `json:"serverCreateCount,omitempty"`
+	CreateStartNo    int    `json:"serverCreateStartNo,omitempty"`
+	Description      string `json:"serverDescription,omitempty"`
+	ImageNo          string `json:"serverImageNo,omitempty"`
 	ImageProductCode string `json:"serverImageProductCode,omitempty"`
-	Name          string `json:"serverName,omitempty"`
-	ProductCode   string `json:"serverProductCode,omitempty"`
-	SpecCode      string `json:"serverSpecCode,omitempty"`
+	Name             string `json:"serverName,omitempty"`
+	ProductCode      string `json:"serverProductCode,omitempty"`
+	SpecCode         string `json:"serverSpecCode,omitempty"`
 }
 
 type BlockStorageMapping struct {
@@ -39,60 +39,49 @@ type BlockStorageMapping struct {
 	Order                      int    `json:"blockStorageMappingList,omitempty"`
 	SnapshotInstanceNo         string `json:"blockStorageMappingSnapshotInstanceNo,omitempty"`
 }
+
 type NetworkInterface struct {
-	IP              string `json:"networkInterfaceIp,omitempty"`
-	No              string `json:"networkInterfaceNo,omitempty"`
-	Order           int    `json:"networkInterfaceList,omitempty"`
-	SubnetNo        string `json:"networkInterfaceSubnetNo,omitempty"`
+	IP       string `json:"networkInterfaceIp,omitempty"`
+	No       string `json:"networkInterfaceNo,omitempty"`
+	Order    int    `json:"networkInterfaceList,omitempty"`
+	SubnetNo string `json:"networkInterfaceSubnetNo,omitempty"`
 }
 
 // ProvisionSpec defines the desired state of Provision
 type ProvisionSpec struct {
-	AccessControlGroupNoListN              string `json:"accessControlGroupNoList,omitempty"`
-	AssociateWithPublicIp                  bool   `json:"associateWithPublicIp,omitempty"`
-	BlockDevicePartitionMountPoint         string `json:"blockDevicePartitionMountPoint,omitempty"`
-	BlockDevicePartitionSize               string `json:"blockDevicePartitionSize,omitempty"`
-	FeeSystemTypeCode                      string `json:"feeSystemTypeCode,omitempty"`
-	InitScriptNo                           string `json:"initScriptNo,omitempty"`
-	IsEncryptedBaseBlockStorageVolume      bool   `json:"isEncryptedBaseBlockStorageVolume,omitempty"`
-	IsProtectServerTermination             bool   `json:"isProtectServerTermination,omitempty"`
-	LoginKeyName                           string `json:"loginKeyName,omitempty"`
-	MemberServerImageInstanceNo            string `json:"memberServerImageInstanceNo,omitempty"`
-	PlacementGroupNo                       string `json:"placementGroupNo,omitempty"`
-	RAIDTypeName                           string `json:"raidTypeName,omitempty"`
-	ResponseFormatType                     string `json:"responseFormatType,omitempty"`
-	ServerCreateCount                      int    `json:"serverCreateCount,omitempty"`
-	ServerCreateStartNo                    int    `json:"serverCreateStartNo,omitempty"`
-	ServerDescription                      string `json:"serverDescription,omitempty"`
-	ServerImageNo                          string `json:"serverImageNo,omitempty"`
-	ServerImageProductCode                 string `json:"serverImageProductCode,omitempty"`
-	ServerName                             string `json:"serverName,omitempty"`
-	ServerProductCode                      string `json:"serverProductCode,omitempty"`
-	ServerSpecCode                         string `json:"serverSpecCode,omitempty"`
-	SubnetNo                               string `json:"subnetNo,omitempty"`
-	VpcNo                                  string `json:"vpcNo,omitempty"`
-	BlockStorageMappings   []BlockStorageMapping `json:"blockStorageMappings,omitempty"`
-	NetworkInterfaces      []NetworkInterface    `json:"networkInterfaces,omitempty"`
+	AccessControlGroupNoListN         string              `json:"accessControlGroupNoList,omitempty"`
+	AssociateWithPublicIp             bool                `json:"associateWithPublicIp,omitempty"`
+	BlockDevicePartitionMountPoint    string              `json:"blockDevicePartitionMountPoint,omitempty"`
+	BlockDevicePartitionSize          string              `json:"blockDevicePartitionSize,omitempty"`
+	FeeSystemTypeCode                 string              `json:"feeSystemTypeCode,omitempty"`
+	InitScriptNo                      string              `json:"initScriptNo,omitempty"`
+	IsEncryptedBaseBlockStorageVolume bool                `json:"isEncryptedBaseBlockStorageVolume,omitempty"`
+	IsProtectServerTermination        bool                `json:"isProtectServerTermination,omitempty"`
+	LoginKeyName                      string              `json:"loginKeyName,omitempty"`
+	MemberServerImageInstanceNo       string              `json:"memberServerImageInstanceNo,omitempty"`
+	PlacementGroupNo                  string              `json:"placementGroupNo,omitempty"`
+	RAIDTypeName                      string              `json:"raidTypeName,omitempty"`
+	ResponseFormatType                string              `json:"responseFormatType,omitempty"`
+	SubnetNo                          string              `json:"subnetNo,omitempty"`
+	VpcNo                             string              `json:"vpcNo,omitempty"`
+	Server                            Server              `json:"server,omitempty"`
+	BlockStorageMapping               BlockStorageMapping `json:"blockStorageMapping,omitempty"`
+	NetworkInterface                  NetworkInterface    `json:"networkInterface,omitempty"`
 }
 
 type ProvisionPhase string
 
 const (
-	ProvisionPhaseNew ProvisionPhase = "New"
-	ProvisionPhaseFailValidation ProvisionPhase = "FailedValidation"
-	ProvisionPhaseInProgress ProvisionPhase = "InProgress"
-	ProvisionPhaseCompleted ProvisionPhase = "Completed"
-	ProvisionPhaseUpdating ProvisionPhase = "Updating"
-	ProvisionPhaseStopping ProvisionPhase = "Stopping"
-	ProvisionPhaseDeleting ProvisionPhase = "Deleting"
+	ProvisionPhaseCreate ProvisionPhase = "Create"
+	ProvisionPhaseUpdate ProvisionPhase = "Update"
+	ProvisionPhaseStop   ProvisionPhase = "Stop"
+	ProvisionPhaseDelete ProvisionPhase = "Delete"
+	ProvisionPhaseGet    ProvisionPhase = "Get"
 )
 
 // ProvisionStatus defines the observed state of Provision
 type ProvisionStatus struct {
-	Phase         ProvisionPhase `json:"phase,omitempty"`
-	Version       int    `json:"version,omitempty"`
-	Warnings      int    `json:"warnings,omitempty"`
-	FailureReason string `json:"failureReason,omitempty"`
+	Phase ProvisionPhase `json:"phase,omitempty"`
 }
 
 //+kubebuilder:object:root=true
