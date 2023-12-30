@@ -20,48 +20,77 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+type Server struct {
+	CreateCount   int    `json:"serverCreateCount,omitempty"`
+	CreateStartNo int    `json:"serverCreateStartNo,omitempty"`
+	Description   string `json:"serverDescription,omitempty"`
+	ImageNo       string `json:"serverImageNo,omitempty"`
+	ImageProductCode string `json:"serverImageProductCode,omitempty"`
+	Name          string `json:"serverName,omitempty"`
+	ProductCode   string `json:"serverProductCode,omitempty"`
+	SpecCode      string `json:"serverSpecCode,omitempty"`
+}
+
+type BlockStorageMapping struct {
+	BlockStorageName           string `json:"blockStorageMappingBlockStorageName,omitempty"`
+	BlockStorageSize           string `json:"blockStorageMappingBlockStorageSize,omitempty"`
+	BlockStorageVolumeTypeCode string `json:"blockStorageMappingBlockStorageVolumeTypeCode,omitempty"`
+	Encrypted                  string `json:"blockStorageMappingEncrypted,omitempty"`
+	Order                      int    `json:"blockStorageMappingList,omitempty"`
+	SnapshotInstanceNo         string `json:"blockStorageMappingSnapshotInstanceNo,omitempty"`
+}
+type NetworkInterface struct {
+	IP              string `json:"networkInterfaceIp,omitempty"`
+	No              string `json:"networkInterfaceNo,omitempty"`
+	Order           int    `json:"networkInterfaceList,omitempty"`
+	SubnetNo        string `json:"networkInterfaceSubnetNo,omitempty"`
+}
+
 // ProvisionSpec defines the desired state of Provision
 type ProvisionSpec struct {
-	AccessControlGroupNoListN                     string `json:"accessControlGroupNoList,omitempty"`
-	AssociateWithPublicIp                         bool   `json:"associateWithPublicIp,omitempty"`
-	BlockDevicePartitionMountPoint                string `json:"blockDevicePartitionMountPoint,omitempty"`
-	BlockDevicePartitionSize                      string `json:"blockDevicePartitionSize,omitempty"`
-	BlockStorageMappingBlockStorageName           string `json:"blockStorageMappingBlockStorageName,omitempty"`
-	BlockStorageMappingBlockStorageSize           string `json:"blockStorageMappingBlockStorageSize,omitempty"`
-	BlockStorageMappingBlockStorageVolumeTypeCode string `json:"blockStorageMappingBlockStorageVolumeTypeCode,omitempty"`
-	BlockStorageMappingEncrypted                  string `json:"blockStorageMappingEncrypted,omitempty"`
-	BlockStorageMappingOrder                      int    `json:"blockStorageMappingList,omitempty"`
-	BlockStorageMappingSnapshotInstanceNo         string `json:"blockStorageMappingSnapshotInstanceNo,omitempty"`
-	FeeSystemTypeCode                             string `json:"feeSystemTypeCode,omitempty"`
-	InitScriptNo                                  string `json:"initScriptNo,omitempty"`
-	IsEncryptedBaseBlockStorageVolume             bool   `json:"isEncryptedBaseBlockStorageVolume,omitempty"`
-	IsProtectServerTermination                    bool   `json:"isProtectServerTermination,omitempty"`
-	LoginKeyName                                  string `json:"loginKeyName,omitempty"`
-	MemberServerImageInstanceNo                   string `json:"memberServerImageInstanceNo,omitempty"`
-	NetworkInterfaceIp                            string `json:"networkInterfaceIp,omitempty"`
-	NetworkInterfaceNo                            string `json:"networkInterfaceNo,omitempty"`
-	NetworkInterfaceOrder                         int    `json:"networkInterfaceList,omitempty"`
-	NetworkInterfaceSubnetNo                      string `json:"networkInterfaceSubnetNo,omitempty"`
-	PlacementGroupNo                              string `json:"placementGroupNo,omitempty"`
-	Verb                                          string `json:"verb,omitempty"`
-	RAIDTypeName                                  string `json:"raidTypeName,omitempty"`
-	ResponseFormatType                            string `json:"responseFormatType,omitempty"`
-	ServerCreateCount                             int    `json:"serverCreateCount,omitempty"`
-	ServerCreateStartNo                           int    `json:"serverCreateStartNo,omitempty"`
-	ServerDescription                             string `json:"serverDescription,omitempty"`
-	ServerImageNo                                 string `json:"serverImageNo,omitempty"`
-	ServerImageProductCode                        string `json:"serverImageProductCode,omitempty"`
-	ServerName                                    string `json:"serverName,omitempty"`
-	ServerProductCode                             string `json:"serverProductCode,omitempty"`
-	ServerSpecCode                                string `json:"serverSpecCode,omitempty"`
-	SubnetNo                                      string `json:"subnetNo,omitempty"`
-	VpcNo                                         string `json:"vpcNo,omitempty"`
+	AccessControlGroupNoListN              string `json:"accessControlGroupNoList,omitempty"`
+	AssociateWithPublicIp                  bool   `json:"associateWithPublicIp,omitempty"`
+	BlockDevicePartitionMountPoint         string `json:"blockDevicePartitionMountPoint,omitempty"`
+	BlockDevicePartitionSize               string `json:"blockDevicePartitionSize,omitempty"`
+	FeeSystemTypeCode                      string `json:"feeSystemTypeCode,omitempty"`
+	InitScriptNo                           string `json:"initScriptNo,omitempty"`
+	IsEncryptedBaseBlockStorageVolume      bool   `json:"isEncryptedBaseBlockStorageVolume,omitempty"`
+	IsProtectServerTermination             bool   `json:"isProtectServerTermination,omitempty"`
+	LoginKeyName                           string `json:"loginKeyName,omitempty"`
+	MemberServerImageInstanceNo            string `json:"memberServerImageInstanceNo,omitempty"`
+	PlacementGroupNo                       string `json:"placementGroupNo,omitempty"`
+	RAIDTypeName                           string `json:"raidTypeName,omitempty"`
+	ResponseFormatType                     string `json:"responseFormatType,omitempty"`
+	ServerCreateCount                      int    `json:"serverCreateCount,omitempty"`
+	ServerCreateStartNo                    int    `json:"serverCreateStartNo,omitempty"`
+	ServerDescription                      string `json:"serverDescription,omitempty"`
+	ServerImageNo                          string `json:"serverImageNo,omitempty"`
+	ServerImageProductCode                 string `json:"serverImageProductCode,omitempty"`
+	ServerName                             string `json:"serverName,omitempty"`
+	ServerProductCode                      string `json:"serverProductCode,omitempty"`
+	ServerSpecCode                         string `json:"serverSpecCode,omitempty"`
+	SubnetNo                               string `json:"subnetNo,omitempty"`
+	VpcNo                                  string `json:"vpcNo,omitempty"`
+	BlockStorageMappings   []BlockStorageMapping `json:"blockStorageMappings,omitempty"`
+	NetworkInterfaces      []NetworkInterface    `json:"networkInterfaces,omitempty"`
 }
+
+type ProvisionPhase string
+
+const (
+	ProvisionPhaseNew ProvisionPhase = "New"
+	ProvisionPhaseFailValidation ProvisionPhase = "FailedValidation"
+	ProvisionPhaseInProgress ProvisionPhase = "InProgress"
+	ProvisionPhaseCompleted ProvisionPhase = "Completed"
+	ProvisionPhaseUpdating ProvisionPhase = "Updating"
+	ProvisionPhaseStopping ProvisionPhase = "Stopping"
+	ProvisionPhaseDeleting ProvisionPhase = "Deleting"
+)
 
 // ProvisionStatus defines the observed state of Provision
 type ProvisionStatus struct {
+	Phase         ProvisionPhase `json:"phase,omitempty"`
 	Version       int    `json:"version,omitempty"`
-	Errors        int    `json:"errors,omitempty"`
 	Warnings      int    `json:"warnings,omitempty"`
 	FailureReason string `json:"failureReason,omitempty"`
 }
