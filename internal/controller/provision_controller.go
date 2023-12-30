@@ -33,7 +33,20 @@ import (
 // ProvisionReconciler reconciles a Provision object
 type ProvisionReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme     *runtime.Scheme
+	ncpService *ncputil.NcpService
+}
+
+func NewProvisionReconciler(
+	client client.Client,
+	scheme *runtime.Scheme,
+	ncpService *ncputil.NcpService,
+) *ProvisionReconciler {
+	return &ProvisionReconciler{
+		Client:     client,
+		Scheme:     scheme,
+		ncpService: ncpService,
+	}
 }
 
 //+kubebuilder:rbac:groups=vm.cloudclub.io,resources=provisions,verbs=get;list;watch;create;update;patch;delete
@@ -65,42 +78,51 @@ func (r *ProvisionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, err
 	}
 
-	ncpService := ncputil.NewNcpService("token")
-
-	switch original.Spec.Verb {
-	case "", ProvisionVerbCreate:
+	switch original.Status.Phase {
+	case "", vmv1.ProvisionPhaseCreate:
 		log.V(0).Info("Creating a new VM")
-		// // create
-		// err := ncpService.Server.Create(apiUrlCreate)
-		// if err != nil {
-		// 	log.Error(err, "Failed to create VM")
-		// 	return ctrl.Result{}, err
-		// }
-	case ProvisionVerbUpdate:
+		// create
+		err := r.ncpService.Server.Create(apiUrlCreate)
+		if err != nil {
+			log.Error(err, "Failed to create VM")
+			return ctrl.Result{}, err
+		}
+	case vmv1.ProvisionPhaseUpdate:
 		// update
 		log.V(0).Info("Updating an existing VM")
-		err := ncpService.Server.Update(apiUrlUpdate)
+		err := r.ncpService.Server.Update(apiUrlUpdate)
 		if err != nil {
 			log.Error(err, "Failed to update VM")
 			return ctrl.Result{}, err
 		}
-	case ProvisionVerbDelete:
+	case vmv1.ProvisionPhaseStop:
+		// delete
+		log.V(0).Info("Stopping an existing VM")
+		err := r.ncpService.Server.Stop(apiUrlDelete)
+		if err != nil {
+			log.Error(err, "Failed to stop VM")
+			return ctrl.Result{}, err
+		}
+	case vmv1.ProvisionPhaseDelete:
 		// delete
 		log.V(0).Info("Deleting an existing VM")
-		err := ncpService.Server.Delete(apiUrlDelete)
+		err := r.ncpService.Server.Delete(apiUrlDelete)
 		if err != nil {
 			log.Error(err, "Failed to delete VM")
 			return ctrl.Result{}, err
 		}
-	case ProvisionVerbGet:
-		// get
-		log.V(0).Info("Getting VM information")
-		err := ncpService.Server.Get(apiUrlGet)
+	case vmv1.ProvisionPhaseGet:
+		// get info
+		log.V(0).Info("Getting information for an existing VM")
+		err := r.ncpService.Server.Get(apiUrlGet)
 		if err != nil {
 			log.Error(err, "Failed to get VM information")
 			return ctrl.Result{}, err
 		}
+	default:
+		log.V(0).Info("No action defined for the current phase")
 	}
+
 	return ctrl.Result{}, nil
 }
 

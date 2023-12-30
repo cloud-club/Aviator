@@ -42,18 +42,21 @@ spec:
                 type: string
               blockDevicePartitionSize:
                 type: string
-              blockStorageMappingBlockStorageName:
-                type: string
-              blockStorageMappingBlockStorageSize:
-                type: string
-              blockStorageMappingBlockStorageVolumeTypeCode:
-                type: string
-              blockStorageMappingEncrypted:
-                type: string
-              blockStorageMappingList:
-                type: integer
-              blockStorageMappingSnapshotInstanceNo:
-                type: string
+              blockStorageMapping:
+                properties:
+                  blockStorageMappingBlockStorageName:
+                    type: string
+                  blockStorageMappingBlockStorageSize:
+                    type: string
+                  blockStorageMappingBlockStorageVolumeTypeCode:
+                    type: string
+                  blockStorageMappingEncrypted:
+                    type: string
+                  blockStorageMappingList:
+                    type: integer
+                  blockStorageMappingSnapshotInstanceNo:
+                    type: string
+                type: object
               feeSystemTypeCode:
                 type: string
               initScriptNo:
@@ -66,39 +69,43 @@ spec:
                 type: string
               memberServerImageInstanceNo:
                 type: string
-              networkInterfaceIp:
-                type: string
-              networkInterfaceList:
-                type: integer
-              networkInterfaceNo:
-                type: string
-              networkInterfaceSubnetNo:
-                type: string
+              networkInterface:
+                properties:
+                  networkInterfaceIp:
+                    type: string
+                  networkInterfaceList:
+                    type: integer
+                  networkInterfaceNo:
+                    type: string
+                  networkInterfaceSubnetNo:
+                    type: string
+                type: object
               placementGroupNo:
                 type: string
               raidTypeName:
                 type: string
               responseFormatType:
                 type: string
-              serverCreateCount:
-                type: integer
-              serverCreateStartNo:
-                type: integer
-              serverDescription:
-                type: string
-              serverImageNo:
-                type: string
-              serverImageProductCode:
-                type: string
-              serverName:
-                type: string
-              serverProductCode:
-                type: string
-              serverSpecCode:
-                type: string
+              server:
+                properties:
+                  serverCreateCount:
+                    type: integer
+                  serverCreateStartNo:
+                    type: integer
+                  serverDescription:
+                    type: string
+                  serverImageNo:
+                    type: string
+                  serverImageProductCode:
+                    type: string
+                  serverName:
+                    type: string
+                  serverProductCode:
+                    type: string
+                  serverSpecCode:
+                    type: string
+                type: object
               subnetNo:
-                type: string
-              verb:
                 type: string
               vpcNo:
                 type: string
@@ -106,14 +113,8 @@ spec:
           status:
             description: ProvisionStatus defines the observed state of Provision
             properties:
-              errors:
-                type: integer
-              failureReason:
+              phase:
                 type: string
-              version:
-                type: integer
-              warnings:
-                type: integer
             type: object
         type: object
     served: true
