@@ -159,7 +159,8 @@ func update(r *ProvisionReconciler, log logr.Logger, url string, payload interfa
 
 func stop(r *ProvisionReconciler, log logr.Logger, url string, payload interface{}) error {
 	log.V(ErrorLevelIsInfo).Info("Stopping an existing VM")
-	return r.ncpService.Server.Stop(url)
+	//return r.ncpService.Server.Stop(url)
+	return nil
 }
 
 func get(r *ProvisionReconciler, log logr.Logger, url string, payload interface{}) error {
