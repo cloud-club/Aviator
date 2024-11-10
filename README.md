@@ -183,19 +183,6 @@ kubectl get provisions
 kubectl describe provision example-vm
 ```
 
-## Error Handling
-
-The controller includes robust error handling for common scenarios:
-
-```go
-var errorNotStopped = errors.New("Server is not stopped before update or deletion")
-
-// Status checking before operations
-func checkStatus(server *ServerService, condition string, repeat int) bool {
-    // Implementation
-}
-```
-
 ## Contributing
 
 1. Fork both repositories (controller and [Aviator-service](https://github.com/cloud-club/Aviator-service))
@@ -203,7 +190,3 @@ func checkStatus(server *ServerService, condition string, repeat int) bool {
 3. Run tests and linting
 4. Submit Pull Requests to both repos if needed
 5. Ensure CI pipeline passes
-
-## License
-
-Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
