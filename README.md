@@ -192,3 +192,5 @@ kubectl describe provision example-vm
 5. Ensure CI pipeline passes
 
 <!-- Security scan triggered at 2025-09-02 16:16:43 -->
+
+<!-- Security scan triggered at 2025-09-02 17:03:47 -->
