@@ -190,3 +190,5 @@ kubectl describe provision example-vm
 3. Run tests and linting
 4. Submit Pull Requests to both repos if needed
 5. Ensure CI pipeline passes
+
+<!-- Security scan triggered at 2025-09-02 16:16:43 -->
